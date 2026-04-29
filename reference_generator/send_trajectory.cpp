@@ -141,20 +141,20 @@ std::pair<tf2::Vector3, tf2::Quaternion> PoseInterpolation(
     double lambda)
 {
     Eigen::Matrix4d pos_interp;    // Posición en función del tiempo y lambda
-    Eigen::Matrix3d orientacion;
+    Eigen::Matrix3d orientacion;   // Orientación en función del tiempo y lambda
     tf2::Vector3 p_interp;    // Placeholder for the interpolated position
     tf2::Quaternion q_interp; // Placeholder for the interpolated quaternion
 
     pos_interp = start_pose + lambda*(end_pose - start_pose);
-    //p_interp = [pos_interp(0,3), pos_interp(1,3), pos_interp(2,3)];
+    
     p_interp = tf2::Vector3(
         pos_interp(0,3),
         pos_interp(1,3),
-        pos_interp(2,3)
-    );
+        pos_interp(2,3));
+        
     orientacion << pos_interp(0,0), pos_interp(0,1), pos_interp(0,2),
-         pos_interp(1,0), pos_interp(1,1), pos_interp(1,2),
-         pos_interp(2,0), pos_interp(2,1), pos_interp(2,2);
+        pos_interp(1,0), pos_interp(1,1), pos_interp(1,2),
+        pos_interp(2,0), pos_interp(2,1), pos_interp(2,2);
 
     q_interp = rot2Quat(orientacion);
 
