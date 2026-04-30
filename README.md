@@ -4,11 +4,11 @@ Este es el repositorio para el Lab1 de ampliación de robótica de manipuladores
 
 ## Fundamento teórico
 
-Para mover el EE en línea recta entre dos puntos $p_0$ y $p_1$, se utiliza una ley temporal basada en un parámetro $\lambda(t) \in [0,1]$, siendo $\lambda(0)=0$ al inicio del movimiento y $\lambda(t_f)=1$ al final.
+Para mover el EE en línea recta entre dos puntos $x_0$ y $x_1$, se utiliza una ley temporal basada en un parámetro $\lambda(t) \in [0,1]$, siendo $\lambda(0)=0$ al inicio del movimiento y $\lambda(t_f)=1$ al final.
 
 La interpolación se realiza con la palicación de la siguiente fórmula:
 
-$p(t)=p_1-\lambda(t)(p_1-p_0)$
+$x(t)=x_1-\lambda(t)(x_1-x_0)$
 
 ## Aplicación práctica
 
@@ -51,3 +51,8 @@ q_interp = rot2Quat(orientacion);
 
 return {p_interp, q_interp};
 ~~~
+
+## Resultados
+Tras lanzar el comando `ros2 launch cartesian_trajectory_planning send_trajectory.launch.py` en la terminal, se obtiene el resultado esperado:
+
+![Resultado de la interpolación](/images/resultado_Lab1.png)
