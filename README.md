@@ -68,7 +68,7 @@ En este ejercicio se dividirá la trayectoria en los tres tramos que se observab
 Para la <ins>posición</ins> simplemente se aplicará la siguiente fórmula:
 
 $$
-p(t) = \boldsymbol{p}_1 - \frac{(\tau - t)^2}{4\tau T_1}\Delta \boldsymbol{p}_1 + \frac{(\tau + t)^2}{4\tau T_2}\Delta \boldsymbol{p}_2
+\boldsymbol{p(t)} = \boldsymbol{p}_1 - \frac{(\tau - t)^2}{4\tau T_1}\Delta \boldsymbol{p}_1 + \frac{(\tau + t)^2}{4\tau T_2}\Delta \boldsymbol{p}_2
 $$
 
 Para la <ins>orientación</ins> se tendrán que tener en cuenta las suavizaciones de tanto $[-\tau, 0]$ y de $[0, \tau]$ con la multiplicación de $qk_1$ y $qk_2$ respectivamente.
