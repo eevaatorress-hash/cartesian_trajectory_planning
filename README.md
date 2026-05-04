@@ -61,10 +61,14 @@ Tras lanzar el comando `ros2 launch cartesian_trajectory_planning send_trajector
 
 # Ejercicio 2
 ## Fundamento teórico
-Cuando se concatenan múltiples trayectorias cartesianas que pasan por distintos puntos en el espacio, se quiere evitar las discontinuidades en velocidades las cuáles pueden resultar en aceleraciones elevadas. Es por ello, que se utilizará el suavizado de trayectorias por puntos intermedios y que ayudarán a conseguir lineas continuas en la velocidad durante esos tramos, esto se puede observar en la siguiente figura:
+Cuando se concatenan múltiples trayectorias cartesianas que pasan por distintos puntos en el espacio, se quiere evitar las discontinuidades en velocidades las cuáles pueden resultar en aceleraciones elevadas. Es por ello, que se utilizará el suavizado de trayectorias por puntos intermedios y que ayudarán a conseguir lineas continuas en la velocidad durante esos tramos. Esto se puede observar en la siguiente figura:
 ![Consecuencias de suavizado en velocidad](/images/smooth_trajectory.png)
 
 En este ejercicio se dividirá la trayectoria en los tres tramos que se observaban en la figura anterior. El primer y último tramo usarán la interpolación de la pose planteada en el ejercicio anterior, mientras que el tramo intermedio seguirá la función del suavizado.
 
-Para la <u>posición</u> simplemente se aplicará la siguiente fórmula:
+Para la <ins>posición</ins> simplemente se aplicará la siguiente fórmula:
+
 $p(t) = p_1 - \frac{(\tau - t)^2}{4\tau T_1}\Delta p_1 + \frac{(\tau + t)^2}{4\tau T_2}\Delta p_2$
+
+
+Para la <ins>orientación</ins> se tendrán que tener en cuenta las suavizaciones de tanto $[-\tau, 0]$ y de $[0, \tau]$
