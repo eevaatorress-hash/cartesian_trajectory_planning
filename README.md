@@ -1,5 +1,3 @@
-<img width="1188" height="171" alt="image" src="https://github.com/user-attachments/assets/44622811-df7d-4ed9-982a-fd6d2fdac9da" /># cartesian_trajectory_planning
-
 Este es el repositorio para el Lab1 y Lab2 de ampliación de robótica de manipuladores.
 
 # Ejercicio 1
