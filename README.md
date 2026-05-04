@@ -67,4 +67,4 @@ Cuando se concatenan múltiples trayectorias cartesianas que pasan por distintos
 En este ejercicio se dividirá la trayectoria en los tres tramos que se observaban en la figura anterior. El primer y último tramo usarán la interpolación de la pose planteada en el ejercicio anterior, mientras que el tramo intermedio seguirá la función del suavizado.
 
 Para la <u>posición</u> simplemente se aplicará la siguiente fórmula:
-$$**p**(t) = **p**_1 - (tau - t)²/(4 tau T_1)**deltap**_1 + (tau + t)²/(4 tau T_2)**deltap**_2$$
+$p(t) = p_1 - \frac{(\tau - t)^2}{4\tau T_1}\Delta p_1 + \frac{(\tau + t)^2}{4\tau T_2}\Delta p_2$
