@@ -1,3 +1,4 @@
+# cartesian_trajectory_planning
 Este es el repositorio para el Lab1 y Lab2 de ampliación de robótica de manipuladores.
 
 # Ejercicio 1
