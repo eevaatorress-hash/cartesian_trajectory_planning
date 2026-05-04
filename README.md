@@ -74,18 +74,28 @@ Para la <ins>orientación</ins> se tendrán que tener en cuenta las suavizacione
 $\boldsymbol{q}(t) = \boldsymbol{q}_1 \boldsymbol{qk}_1 \boldsymbol{qk}_2$
 
 Como se puede observar para obtener el cuaternio interpolado primero hemos de calcular $\boldsymbol{qk}_1$ y $\boldsymbol{qk}_2$, se aplicarán las siguientes ecuaciones:
+$$
+q_{01} = q_0^{-1} \cdot q_1
+$$
 
-$q_{01} = q_0^{-1} \cdot q_1$
+$$
+\theta_{01} = 2\arccos(w_{01})
+$$
 
-$\theta_{01} = 2\arccos(w_{01})$
+$$
+\mathbf{n}_{01} = \frac{\mathbf{v}_{01}}{\sin(\theta_{01}/2)}
+$$
 
-$$\mathbf{n}_{01} = \frac{\mathbf{v}_{01}}{\sin(\theta_{01}/2)}$$
+---
 
-$\mathbf{n}_{01} = \frac{\mathbf{v}_{01}}{\sin(\theta_{01}/2)}$
+$$
+q_{12} = q_1^{-1} \cdot q_2
+$$
 
+$$
+\theta_{12} = 2\arccos(w_{12})
+$$
 
-$q_{12} = q_1^{-1} \cdot q_2$
-
-$\theta_{12} = 2\arccos(w_{12})$
-
-$\mathbf{n}_{12} = \frac{\mathbf{v}_{12}}{\sin(\theta_{12}/2)}$
+$$
+\mathbf{n}_{12} = \frac{\mathbf{v}_{12}}{\sin(\theta_{12}/2)}
+$$
