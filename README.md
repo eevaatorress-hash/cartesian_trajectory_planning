@@ -67,19 +67,20 @@ En este ejercicio se dividirá la trayectoria en los tres tramos que se observab
 
 Para la <ins>posición</ins> simplemente se aplicará la siguiente fórmula:
 
-$p(t) = \mathbf{p}_1 - \frac{(\tau - t)^2}{4\tau T_1}\Delta \mathbf{p}_1 + \frac{(\tau + t)^2}{4\tau T_2}\Delta \mathbf{p}_2$
+$p(t) = \boldsymbol{p}_1 - \frac{(\tau - t)^2}{4\tau T_1}\Delta \boldsymbol{p}_1 + \frac{(\tau + t)^2}{4\tau T_2}\Delta \boldsymbol{p}_2$
 
 Para la <ins>orientación</ins> se tendrán que tener en cuenta las suavizaciones de tanto $[-\tau, 0]$ y de $[0, \tau]$ con la multiplicación de $qk_1$ y $qk_2$ respectivamente.
 
-$mathbf{q}(t) = mathbf{q}_1 mathbf{qk}_1 mathbf{qk}_2$
+$\boldsymbol{q}(t) = \boldsymbol{q}_1 \boldsymbol{qk}_1 \boldsymbol{qk}_2$
 
-Como se puede observar para obtener el cuaternio interpolado primero hemos de calcular $mathbf{qk}_1$ y $mathbf{qk}_2$, se aplicarán las siguientes ecuaciones:
+Como se puede observar para obtener el cuaternio interpolado primero hemos de calcular $\boldsymbol{qk}_1$ y $\boldsymbol{qk}_2$, se aplicarán las siguientes ecuaciones:
 
 $q_{01} = q_0^{-1} \cdot q_1$  
 $\theta_{01} = 2\arccos(w_{01})$  
-$\mathbf{n}_{01} = (\mathbf{v}_{01})/(sin(theta_{01})/2)$
+$\boldsymbol{n}_{01} = \frac{\boldsymbol{v}_{01}}{\sin(\theta_{01}/2)}$
 
+---
 
 $q_{12} = q_1^{-1} \cdot q_2$  
 $\theta_{12} = 2\arccos(w_{12})$  
-$\mathbf{n}_{12} = \frac{\mathbf{v}_{12}}{\sin(\theta_{12}/2)}$
+$\boldsymbol{n}_{12} = \frac{\boldsymbol{v}_{12}}{\sin(\theta_{12}/2)}$
