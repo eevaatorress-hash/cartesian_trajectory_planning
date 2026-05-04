@@ -72,4 +72,10 @@ $p(t) = \mathbf{p}_1 - \frac{(\tau - t)^2}{4\tau T_1}\Delta \mathbf{p}_1 + \frac
 
 Para la <ins>orientación</ins> se tendrán que tener en cuenta las suavizaciones de tanto $[-\tau, 0]$ y de $[0, \tau]$ con la multiplicación de $qk_1$ y $qk_2$ respectivamente.
 
-$q(t) = q_1 \, qk_1 \, qk_2$
+$mathbf{q}(t) = mathbf{q}_1 mathbf{qk}_1 mathbf{qk}_2$
+
+Como se puede observar para obtener el cuaternio interpolado primero hemos de calcular $mathbf{qk}_1$ y $mathbf{qk}_2$, se aplicarán las siguientes ecuaciones:
+
+| | |
+|---|---|
+| $q_{01} = q_0^{-1} \cdot q_1$ <br> $\theta_{01} = 2\acos(w_{01})$ <br> $\mathbf{n}_{01} = \frac{\mathbf{v}_{01}}{\sin(\theta_{01}/2)}$ | $q_{12} = q_1^{-1} \cdot q_2$ <br> $\theta_{12} = 2\acos(w_{12})$ <br> $\mathbf{n}_{12} = \frac{\mathbf{v}_{12}}{\sin(\theta_{12}/2)}$ |
