@@ -170,7 +170,7 @@ std::pair<tf2::Vector3, tf2::Quaternion> ComputeNextCartesianPose(
     double T,
     double t)
 {
-    const tf2::Vector3 p_interp; // Placeholder for the interpolated position
+    tf2::Vector3 p_interp; // Placeholder for the interpolated position
     tf2::Quaternion q_interp;    // Placeholder for the interpolated quaternion
 
     tf2::Vector3 p0 = tf2::Vector3(
@@ -214,8 +214,8 @@ std::pair<tf2::Vector3, tf2::Quaternion> ComputeNextCartesianPose(
     double thetak1;
     double theta12;
     double thetak2;
-    double deltap1;
-    double deltap2;
+    tf2::Vector3 deltap1;
+    tf2::Vector3 deltap2;
     tf2::Vector3 n01;
     tf2::Vector3 n12;
 
@@ -228,11 +228,23 @@ std::pair<tf2::Vector3, tf2::Quaternion> ComputeNextCartesianPose(
     {
         if (t <= -tau)
         {
-            auto [p_interp, q_interp] = PoseInterpolation(pose_0, pose_1, (t+T)/T);
+            auto [p, q] = PoseInterpolation(pose_0, pose_1, (t+T)/T);
+            p_interp = p;
+            q_interp = q;
+            q_interp.normalize();
+                std::fprintf(
+                stderr,
+                "qppppp = [%f, %f, %f, %f]\n", q_interp.x(), q_interp.y(), q_interp.z(), q_interp.w());
         }
         else if (t>= tau)
         {
-            auto [p_interp, q_interp] = PoseInterpolation(pose_1, pose_2, (t)/T);
+            auto [p, q] = PoseInterpolation(pose_1, pose_2, (t)/T);
+            p_interp = p;
+            q_interp = q;
+            q_interp.normalize();
+              /*  std::fprintf(
+                stderr,
+                "qsssss = [%f, %f, %f, %f]\n", q_interp.x(), q_interp.y(), q_interp.z(), q_interp.w());*/
         }
         else
         {
@@ -245,10 +257,11 @@ std::pair<tf2::Vector3, tf2::Quaternion> ComputeNextCartesianPose(
             double s1 = sin(thetak1/2);
 
             qk1 = tf2::Quaternion(
-                cos(thetak1/2),
+                
                 n01.x() * s1,
                 n01.y() * s1,
-                n01.z() * s1
+                n01.z() * s1,
+                cos(thetak1/2)
             );
 
             q12 = MuliplyQuaternions(InverseQuaternion(q1),q2);
@@ -260,18 +273,27 @@ std::pair<tf2::Vector3, tf2::Quaternion> ComputeNextCartesianPose(
             double s2 = sin(thetak2/2);
 
             qk2 = tf2::Quaternion(
-                cos(thetak2/2),
+                
                 n12.x() * s2,
                 n12.y() * s2,
-                n12.z() * s2
+                n12.z() * s2,
+                cos(thetak2/2)
             );
-            qk2 = tf2::Quaternion(cos(thetak2), n12*sin(thetak2/2));
 
             deltap1 = p1 - p0;
             deltap2 = p2 - p1;
 
-            p_interp = p1 - std::pow((tau - t),2)*deltap1/(4*tau*T) + std::pow((tau + t),2)*deltap2/(4*tau*T);
-            q_interp = q1 * qk1 * qk2;
+            p_interp = p1 - deltap1*std::pow((tau - t),2)/(4*tau*T) + deltap2*std::pow((tau + t),2)/(4*tau*T);
+            q_interp = MuliplyQuaternions(MuliplyQuaternions(q1, qk1), qk2);
+      /*                  std::fprintf(
+                stderr,
+                "q1 = [%f, %f, %f, %f]\n", q1.x(), q1.y(), q1.z(), q1.w());
+            std::fprintf(
+                stderr,
+                "qk1 = [%f, %f, %f, %f]\n", qk1.x(), qk1.y(), qk1.z(), qk1.w());
+             std::fprintf(
+                stderr,
+                "qk2 = [%f, %f, %f, %f]\n", qk2.x(), qk2.y(), qk2.z(), qk2.w());*/
         }
     }
 
@@ -430,7 +452,9 @@ int main(int argc, char **argv)
         for (double t = -T; t <= T + 1e-9; t += sample_time)
         {
             const auto [p_interp, q_interp] = ComputeNextCartesianPose(pose0, pose1, pose2, tau, T, t);
-
+                std::fprintf(
+                stderr,
+                "q = [%f, %f, %f, %f]\n", q_interp.x(), q_interp.y(), q_interp.z(), q_interp.w());
             double roll = 0.0;
             double pitch = 0.0;
             double yaw = 0.0;
