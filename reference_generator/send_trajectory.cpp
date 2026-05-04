@@ -140,24 +140,22 @@ std::pair<tf2::Vector3, tf2::Quaternion> PoseInterpolation(
     const Eigen::Matrix4d &end_pose,
     double lambda)
 {
-    Eigen::Matrix4d pos_interp;    // Posición en función del tiempo y lambda
-    Eigen::Matrix3d orientacion;   // Orientación en función del tiempo y lambda
     Eigen::Matrix3d R_start = start_pose.block<3,3>(0,0); // Matriz de rotación del pose inicial
     Eigen::Matrix3d R_end = end_pose.block<3,3>(0,0); // Matriz de rotación del pose final
     tf2::Vector3 p_interp;    // Placeholder for the interpolated position
     tf2::Quaternion q_interp; // Placeholder for the interpolated quaternion
-    tf2::Vector3 start_p = tf2::Vector3(
-        start_pose(0,3),
+    tf2::Vector3 start_p = tf2::Vector3(    // Posición inicial
+        start_pose(0,3),        
         start_pose(1,3),
         start_pose(2,3));
-    tf2::Vector3 end_p = tf2::Vector3(
+    tf2::Vector3 end_p = tf2::Vector3(      // Posición final
         end_pose(0,3),
         end_pose(1,3),
         end_pose(2,3));
 
-    p_interp = start_p + lambda*(end_p - start_p); //posción interpolada usando interpolación lineal
+    p_interp = start_p + lambda*(end_p - start_p); // Posición interpolada usando interpolación lineal
 
-    tf2::Quaternion q_c = InverseQuaternion(rot2Quat(R_start)) * rot2Quat(R_end); //rotación interpolada usando SLERP
+    tf2::Quaternion q_c = InverseQuaternion(rot2Quat(R_start)) * rot2Quat(R_end); // Rotación interpolada 
     double theta = 2*acos(q_c[3]);
     tf2::Vector3 n = tf2::Vector3(q_c[0], q_c[1], q_c[2]) / sin(theta/2);
     double theta_interp = lambda*theta;
@@ -168,19 +166,8 @@ std::pair<tf2::Vector3, tf2::Quaternion> PoseInterpolation(
         n.z() * s,
         cos(theta_interp/2)
     );
-    q_interp = MuliplyQuaternions(rot2Quat(R_start), q_rot); //rotación interpolada usando SLERP
+    q_interp = MuliplyQuaternions(rot2Quat(R_start), q_rot); // Rotación interpolada 
     q_interp.normalize();
-    /////////////////////////////
-    /*p_interp = tf2::Vector3(
-        pos_interp(0,3),
-        pos_interp(1,3),
-        pos_interp(2,3));
-        
-    orientacion << pos_interp(0,0), pos_interp(0,1), pos_interp(0,2),
-        pos_interp(1,0), pos_interp(1,1), pos_interp(1,2),
-        pos_interp(2,0), pos_interp(2,1), pos_interp(2,2);
-
-    q_interp = rot2Quat(orientacion);*/
 
     return {p_interp, q_interp};
 }
@@ -216,6 +203,7 @@ std::pair<tf2::Vector3, tf2::Quaternion> ComputeNextCartesianPose(
     tf2::Quaternion q12;
     tf2::Quaternion qk1;
     tf2::Quaternion qk2;
+    
     Eigen::Matrix3d orientacion0;
     orientacion0 << pose_0(0,0), pose_0(0,1), pose_0(0,2),
         pose_0(1,0), pose_0(1,1), pose_0(1,2),
@@ -250,21 +238,21 @@ std::pair<tf2::Vector3, tf2::Quaternion> ComputeNextCartesianPose(
     }
     else 
     {
-        if (t <= -tau)
+        if (t <= -tau)      // Trayectoria lineal antes del punto intermedio
         {
             auto [p, q] = PoseInterpolation(pose_0, pose_1, (t+T)/T);
             p_interp = p;
             q_interp = q;
             q_interp.normalize();
         }
-        else if (t>= tau)
+        else if (t>= tau)   // Trayectoria lineal después del punto intermedio
         {
             auto [p, q] = PoseInterpolation(pose_1, pose_2, (t)/T);
             p_interp = p;
             q_interp = q;
             q_interp.normalize();
         }
-        else
+        else    // Suavizado de la trayectoria cerca del punto intermedio
         {
             q01 = MuliplyQuaternions(InverseQuaternion(q0),q1);
             theta01 = 2*acos(q01[3]);
