@@ -103,15 +103,7 @@ $$
 
 Entonces ya se pueden calcular los cuaternios $\boldsymbol{qk}_1$ y $\boldsymbol{qk}_2$.
 
-$$
-\theta_{k_1} = \frac{-(\tau - t)^2}{4\tau T_1}\,\theta_{01}
-\;\Rightarrow\;
-\mathbf{q}_{k_1} =
-\left[
-\cos\!\left(\frac{\theta_{k_1}}{2}\right),\;
-\mathbf{n}_{01}\,\sin\!\left(\frac{\theta_{k_1}}{2}\right)
-\right]
-$$
+$\theta_{k_1} = \frac{-(\tau - t)^2}{4\tau T_1}\,\theta_{01} \Rightarrow \mathbf{q}_{k_1} = \left[ \cos\left(\frac{\theta_{k_1}}{2}\right),\; \mathbf{n}_{01}\sin\left(\frac{\theta_{k_1}}{2}\right) \right]$
 
 $$
 \theta_{k_2} = \frac{(\tau + t)^2}{4\tau T_1}\,\theta_{12}
