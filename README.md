@@ -87,7 +87,7 @@ $$
 \mathbf{n}_{01} = \frac{\mathbf{v}_{01}}{\sin(\theta_{01}/2)}
 $$
 
----
+
 
 $$
 q_{12} = q_1^{-1} \cdot q_2
@@ -101,8 +101,23 @@ $$
 \mathbf{n}_{12} = \frac{\mathbf{v}_{12}}{\sin(\theta_{12}/2)}
 $$
 
-$q_{01} = q_0^{-1} \cdot q_1$
+Entonces ya se pueden calcular los cuaternios $\boldsymbol{qk}_1$ y $\boldsymbol{qk}_2$.
+$$
+\theta_{k_1} = \frac{-(\tau - t)^2}{4\tau T_1}\,\theta_{01}
+\;\Rightarrow\;
+\mathbf{q}_{k_1} =
+\left[
+\cos\!\left(\frac{\theta_{k_1}}{2}\right),\;
+\mathbf{n}_{01}\,\sin\!\left(\frac{\theta_{k_1}}{2}\right)
+\right]
+$$
 
-$\theta_{01} = 2\arccos(w_{01})$
-
-$\mathbf{n}_{01} = \frac{\mathbf{v}_{01}}{\sin(\theta_{01}/2)}$
+$$
+\theta_{k_2} = \frac{(\tau + t)^2}{4\tau T_1}\,\theta_{12}
+\;\Rightarrow\;
+\mathbf{q}_{k_2} =
+\left[
+\cos\!\left(\frac{\theta_{k_2}}{2}\right),\;
+\mathbf{n}_{12}\,\sin\!\left(\frac{\theta_{k_2}}{2}\right)
+\right]
+$$
