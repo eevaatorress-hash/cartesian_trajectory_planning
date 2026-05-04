@@ -77,4 +77,4 @@ Como se puede observar para obtener el cuaternio interpolado primero hemos de ca
 
 | | |
 |---|---|
-| $q_{01} = q_0^{-1} \cdot q_1$ <br> $\theta_{01} = 2\arccos(w_{01})$ <br> $\mathbf{n}_{01} = \frac{\mathbf{v}_{01}}{\sin(\theta_{01}/2)}$ | $q_{12} = q_1^{-1} \cdot q_2$ <br> $\theta_{12} = 2\arccos(w_{12})$ <br> $\mathbf{n}_{12} = \frac{\mathbf{v}_{12}}{\sin(\theta_{12}/2)}$ |
+| $q_{01} = q_0^{-1} \cdot q_1$ <br> $ \theta_{01} = 2\arccos(w_{01}) $ <br> $ \mathbf{n}_{01} = \frac{\mathbf{v}_{01}}{\sin(\theta_{01}/2)} $ | $q_{12} = q_1^{-1} \cdot q_2$ <br> $ \theta_{12} = 2\arccos(w_{12}) $ <br> $ \mathbf{n}_{12} = \frac{\mathbf{v}_{12}}{\sin(\theta_{12}/2)} $ |
