@@ -67,11 +67,15 @@ En este ejercicio se dividirá la trayectoria en los tres tramos que se observab
 
 Para la <ins>posición</ins> simplemente se aplicará la siguiente fórmula:
 
-$p(t) = \boldsymbol{p}_1 - \frac{(\tau - t)^2}{4\tau T_1}\Delta \boldsymbol{p}_1 + \frac{(\tau + t)^2}{4\tau T_2}\Delta \boldsymbol{p}_2$
+$$
+p(t) = \boldsymbol{p}_1 - \frac{(\tau - t)^2}{4\tau T_1}\Delta \boldsymbol{p}_1 + \frac{(\tau + t)^2}{4\tau T_2}\Delta \boldsymbol{p}_2
+$$
 
 Para la <ins>orientación</ins> se tendrán que tener en cuenta las suavizaciones de tanto $[-\tau, 0]$ y de $[0, \tau]$ con la multiplicación de $qk_1$ y $qk_2$ respectivamente.
 
-$\boldsymbol{q}(t) = \boldsymbol{q}_1 \boldsymbol{qk}_1 \boldsymbol{qk}_2$
+$$
+\boldsymbol{q}(t) = \boldsymbol{q}_1 \boldsymbol{qk}_1 \boldsymbol{qk}_2
+$$
 
 Como se puede observar para obtener el cuaternio interpolado primero hemos de calcular $\boldsymbol{qk}_1$ y $\boldsymbol{qk}_2$, se aplicarán las siguientes ecuaciones:
 
@@ -103,7 +107,15 @@ $$
 
 Entonces ya se pueden calcular los cuaternios $\boldsymbol{qk}_1$ y $\boldsymbol{qk}_2$.
 
-$\theta_{k_1} = \frac{-(\tau - t)^2}{4\tau T_1}\,\theta_{01} \Rightarrow \mathbf{q}_{k_1} = \left[ \cos\left(\frac{\theta_{k_1}}{2}\right),\; \mathbf{n}_{01}\sin\left(\frac{\theta_{k_1}}{2}\right) \right]$
+$$
+\theta_{k_1} = \frac{-(\tau - t)^2}{4\tau T_1}\,\theta_{01}
+\;\Rightarrow\;
+\mathbf{q}_{k_1} =
+\left[
+\cos\!\left(\frac{\theta_{k_1}}{2}\right),\;
+\mathbf{n}_{01}\,\sin\!\left(\frac{\theta_{k_1}}{2}\right)
+\right]
+$$
 
 $$
 \theta_{k_2} = \frac{(\tau + t)^2}{4\tau T_1}\,\theta_{12}
