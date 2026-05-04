@@ -132,52 +132,95 @@ $$
 En la práctica se definen las siguientes variables:
 ~~~
 tf2::Vector3 p_interp; // Placeholder for the interpolated position
-    tf2::Quaternion q_interp;    // Placeholder for the interpolated quaternion
+tf2::Quaternion q_interp;    // Placeholder for the interpolated quaternion
 
-    tf2::Vector3 p0 = tf2::Vector3(
-        pose_0(0,3),
-        pose_0(1,3),
-        pose_0(2,3));
+tf2::Vector3 p0 = tf2::Vector3(
+    pose_0(0,3),
+    pose_0(1,3),
+    pose_0(2,3));
 
-    tf2::Vector3 p1 = tf2::Vector3(
-        pose_1(0,3),
-        pose_1(1,3),
-        pose_1(2,3));
+tf2::Vector3 p1 = tf2::Vector3(
+    pose_1(0,3),
+    pose_1(1,3),
+    pose_1(2,3));
 
-    tf2::Vector3 p2 = tf2::Vector3(
-        pose_2(0,3),
-        pose_2(1,3),
-        pose_2(2,3));
+tf2::Vector3 p2 = tf2::Vector3(
+    pose_2(0,3),
+    pose_2(1,3),
+    pose_2(2,3));
 
-    tf2::Quaternion q01;
-    tf2::Quaternion q12;
-    tf2::Quaternion qk1;
-    tf2::Quaternion qk2;
+tf2::Quaternion q01;
+tf2::Quaternion q12;
+tf2::Quaternion qk1;
+tf2::Quaternion qk2;
     
-    Eigen::Matrix3d orientacion0;
-    orientacion0 << pose_0(0,0), pose_0(0,1), pose_0(0,2),
-        pose_0(1,0), pose_0(1,1), pose_0(1,2),
-        pose_0(2,0), pose_0(2,1), pose_0(2,2);
-    tf2::Quaternion q0 = rot2Quat(orientacion0);
+Eigen::Matrix3d orientacion0;
+orientacion0 << pose_0(0,0), pose_0(0,1), pose_0(0,2),
+    pose_0(1,0), pose_0(1,1), pose_0(1,2),
+    pose_0(2,0), pose_0(2,1), pose_0(2,2);
+tf2::Quaternion q0 = rot2Quat(orientacion0);
 
-    Eigen::Matrix3d orientacion1;
-    orientacion1 << pose_1(0,0), pose_1(0,1), pose_1(0,2),
-        pose_1(1,0), pose_1(1,1), pose_1(1,2),
-        pose_1(2,0), pose_1(2,1), pose_1(2,2);
-    tf2::Quaternion q1 = rot2Quat(orientacion1);
+Eigen::Matrix3d orientacion1;
+orientacion1 << pose_1(0,0), pose_1(0,1), pose_1(0,2),
+    pose_1(1,0), pose_1(1,1), pose_1(1,2),
+    pose_1(2,0), pose_1(2,1), pose_1(2,2);
+tf2::Quaternion q1 = rot2Quat(orientacion1);
 
-    Eigen::Matrix3d orientacion2;
-    orientacion2 << pose_2(0,0), pose_2(0,1), pose_2(0,2),
-        pose_2(1,0), pose_2(1,1), pose_2(1,2),
-        pose_2(2,0), pose_2(2,1), pose_2(2,2);
-    tf2::Quaternion q2 = rot2Quat(orientacion2);
+Eigen::Matrix3d orientacion2;
+orientacion2 << pose_2(0,0), pose_2(0,1), pose_2(0,2),
+    pose_2(1,0), pose_2(1,1), pose_2(1,2),
+    pose_2(2,0), pose_2(2,1), pose_2(2,2);
+tf2::Quaternion q2 = rot2Quat(orientacion2);
 
-    double theta01;
-    double thetak1;
-    double theta12;
-    double thetak2;
-    tf2::Vector3 deltap1;
-    tf2::Vector3 deltap2;
-    tf2::Vector3 n01;
-    tf2::Vector3 n12;
+double theta01;
+double thetak1;
+double theta12;
+double thetak2;
+tf2::Vector3 deltap1;
+tf2::Vector3 deltap2;
+tf2::Vector3 n01;
+tf2::Vector3 n12;
+~~~
+
+Se calcula la posición interpolada con:
+~~~
+p_interp = p1 - deltap1*std::pow((tau - t),2)/(4*tau*T) + deltap2*std::pow((tau + t),2)/(4*tau*T);
+~~~
+
+Y finalmente la orientación interpolada con:
+~~~
+q01 = MuliplyQuaternions(InverseQuaternion(q0),q1);
+theta01 = 2*acos(q01[3]);
+n01 = tf2::Vector3(q01[0], q01[1], q01[2]) / sin(theta01/2);
+
+thetak1 = -std::pow((tau - t),2)*theta01/(4*tau*T);
+            
+double s1 = sin(thetak1/2);
+
+qk1 = tf2::Quaternion(     
+    n01.x() * s1,
+    n01.y() * s1,
+    n01.z() * s1,
+    cos(thetak1/2)
+);
+
+q12 = MuliplyQuaternions(InverseQuaternion(q1),q2);
+theta12 = 2*acos(q12[3]);
+n12 = tf2::Vector3(q12[0], q12[1], q12[2]) / sin(theta12/2);
+
+thetak2 = std::pow((tau + t),2)*theta12/(4*tau*T);
+            
+double s2 = sin(thetak2/2);
+
+qk2 = tf2::Quaternion(
+    n12.x() * s2,
+    n12.y() * s2,
+    n12.z() * s2,
+    cos(thetak2/2)
+);
+
+deltap1 = p1 - p0;
+deltap2 = p2 - p1;
+
+q_interp = MuliplyQuaternions(MuliplyQuaternions(q1, qk1), qk2);
 ~~~
