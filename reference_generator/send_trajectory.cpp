@@ -142,12 +142,36 @@ std::pair<tf2::Vector3, tf2::Quaternion> PoseInterpolation(
 {
     Eigen::Matrix4d pos_interp;    // Posición en función del tiempo y lambda
     Eigen::Matrix3d orientacion;   // Orientación en función del tiempo y lambda
+    Eigen::Matrix3d R_start = start_pose.block<3,3>(0,0); // Matriz de rotación del pose inicial
+    Eigen::Matrix3d R_end = end_pose.block<3,3>(0,0); // Matriz de rotación del pose final
     tf2::Vector3 p_interp;    // Placeholder for the interpolated position
     tf2::Quaternion q_interp; // Placeholder for the interpolated quaternion
+    tf2::Vector3 start_p = tf2::Vector3(
+        start_pose(0,3),
+        start_pose(1,3),
+        start_pose(2,3));
+    tf2::Vector3 end_p = tf2::Vector3(
+        end_pose(0,3),
+        end_pose(1,3),
+        end_pose(2,3));
 
-    pos_interp = start_pose + lambda*(end_pose - start_pose);
-    
-    p_interp = tf2::Vector3(
+    p_interp = start_p + lambda*(end_p - start_p); //posción interpolada usando interpolación lineal
+
+    tf2::Quaternion q_c = InverseQuaternion(rot2Quat(R_start)) * rot2Quat(R_end); //rotación interpolada usando SLERP
+    double theta = 2*acos(q_c[3]);
+    tf2::Vector3 n = tf2::Vector3(q_c[0], q_c[1], q_c[2]) / sin(theta/2);
+    double theta_interp = lambda*theta;
+    double s = sin(theta_interp/2);
+    tf2::Quaternion q_rot = tf2::Quaternion(
+        n.x() * s,
+        n.y() * s,
+        n.z() * s,
+        cos(theta_interp/2)
+    );
+    q_interp = MuliplyQuaternions(rot2Quat(R_start), q_rot); //rotación interpolada usando SLERP
+    q_interp.normalize();
+    /////////////////////////////
+    /*p_interp = tf2::Vector3(
         pos_interp(0,3),
         pos_interp(1,3),
         pos_interp(2,3));
@@ -156,7 +180,7 @@ std::pair<tf2::Vector3, tf2::Quaternion> PoseInterpolation(
         pos_interp(1,0), pos_interp(1,1), pos_interp(1,2),
         pos_interp(2,0), pos_interp(2,1), pos_interp(2,2);
 
-    q_interp = rot2Quat(orientacion);
+    q_interp = rot2Quat(orientacion);*/
 
     return {p_interp, q_interp};
 }
@@ -232,9 +256,6 @@ std::pair<tf2::Vector3, tf2::Quaternion> ComputeNextCartesianPose(
             p_interp = p;
             q_interp = q;
             q_interp.normalize();
-                std::fprintf(
-                stderr,
-                "qppppp = [%f, %f, %f, %f]\n", q_interp.x(), q_interp.y(), q_interp.z(), q_interp.w());
         }
         else if (t>= tau)
         {
@@ -242,9 +263,6 @@ std::pair<tf2::Vector3, tf2::Quaternion> ComputeNextCartesianPose(
             p_interp = p;
             q_interp = q;
             q_interp.normalize();
-              /*  std::fprintf(
-                stderr,
-                "qsssss = [%f, %f, %f, %f]\n", q_interp.x(), q_interp.y(), q_interp.z(), q_interp.w());*/
         }
         else
         {
@@ -285,15 +303,6 @@ std::pair<tf2::Vector3, tf2::Quaternion> ComputeNextCartesianPose(
 
             p_interp = p1 - deltap1*std::pow((tau - t),2)/(4*tau*T) + deltap2*std::pow((tau + t),2)/(4*tau*T);
             q_interp = MuliplyQuaternions(MuliplyQuaternions(q1, qk1), qk2);
-      /*                  std::fprintf(
-                stderr,
-                "q1 = [%f, %f, %f, %f]\n", q1.x(), q1.y(), q1.z(), q1.w());
-            std::fprintf(
-                stderr,
-                "qk1 = [%f, %f, %f, %f]\n", qk1.x(), qk1.y(), qk1.z(), qk1.w());
-             std::fprintf(
-                stderr,
-                "qk2 = [%f, %f, %f, %f]\n", qk2.x(), qk2.y(), qk2.z(), qk2.w());*/
         }
     }
 
@@ -452,9 +461,6 @@ int main(int argc, char **argv)
         for (double t = -T; t <= T + 1e-9; t += sample_time)
         {
             const auto [p_interp, q_interp] = ComputeNextCartesianPose(pose0, pose1, pose2, tau, T, t);
-                std::fprintf(
-                stderr,
-                "q = [%f, %f, %f, %f]\n", q_interp.x(), q_interp.y(), q_interp.z(), q_interp.w());
             double roll = 0.0;
             double pitch = 0.0;
             double yaw = 0.0;
