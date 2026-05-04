@@ -80,7 +80,7 @@ $$
 Como se puede observar para obtener el cuaternio interpolado primero hemos de calcular $\boldsymbol{qk}_1$ y $\boldsymbol{qk}_2$, se aplicarán las siguientes ecuaciones:
 
 $$
-q_{01} = q_0^{-1} \cdot q_1
+\mathbf{q}_{01} = \mathbf{q}_{01}^{-1} \cdot q_1
 $$
 
 $$
@@ -94,7 +94,7 @@ $$
 
 
 $$
-q_{12} = q_1^{-1} \cdot q_2
+\mathbf{q}_{12} = \mathbf{q}_{1}^{-1} \cdot q_2
 $$
 
 $$
