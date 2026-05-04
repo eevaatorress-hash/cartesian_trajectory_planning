@@ -126,3 +126,58 @@ $$
 \mathbf{n}_{12}\,\sin\!\left(\frac{\theta_{k_2}}{2}\right)
 \right]
 $$
+
+
+## Aplicación práctica
+En la práctica se definen las siguientes variables:
+~~~
+tf2::Vector3 p_interp; // Placeholder for the interpolated position
+    tf2::Quaternion q_interp;    // Placeholder for the interpolated quaternion
+
+    tf2::Vector3 p0 = tf2::Vector3(
+        pose_0(0,3),
+        pose_0(1,3),
+        pose_0(2,3));
+
+    tf2::Vector3 p1 = tf2::Vector3(
+        pose_1(0,3),
+        pose_1(1,3),
+        pose_1(2,3));
+
+    tf2::Vector3 p2 = tf2::Vector3(
+        pose_2(0,3),
+        pose_2(1,3),
+        pose_2(2,3));
+
+    tf2::Quaternion q01;
+    tf2::Quaternion q12;
+    tf2::Quaternion qk1;
+    tf2::Quaternion qk2;
+    
+    Eigen::Matrix3d orientacion0;
+    orientacion0 << pose_0(0,0), pose_0(0,1), pose_0(0,2),
+        pose_0(1,0), pose_0(1,1), pose_0(1,2),
+        pose_0(2,0), pose_0(2,1), pose_0(2,2);
+    tf2::Quaternion q0 = rot2Quat(orientacion0);
+
+    Eigen::Matrix3d orientacion1;
+    orientacion1 << pose_1(0,0), pose_1(0,1), pose_1(0,2),
+        pose_1(1,0), pose_1(1,1), pose_1(1,2),
+        pose_1(2,0), pose_1(2,1), pose_1(2,2);
+    tf2::Quaternion q1 = rot2Quat(orientacion1);
+
+    Eigen::Matrix3d orientacion2;
+    orientacion2 << pose_2(0,0), pose_2(0,1), pose_2(0,2),
+        pose_2(1,0), pose_2(1,1), pose_2(1,2),
+        pose_2(2,0), pose_2(2,1), pose_2(2,2);
+    tf2::Quaternion q2 = rot2Quat(orientacion2);
+
+    double theta01;
+    double thetak1;
+    double theta12;
+    double thetak2;
+    tf2::Vector3 deltap1;
+    tf2::Vector3 deltap2;
+    tf2::Vector3 n01;
+    tf2::Vector3 n12;
+~~~
