@@ -1,14 +1,30 @@
 # cartesian_trajectory_planning
-Este es el repositorio para el Lab1 y Lab2 de ampliación de robótica de manipuladores.
+Este es el repositorio para el Lab1 de ampliación de robótica de manipuladores.
 
 # Ejercicio 1
 ## Fundamento teórico
 
-Para mover el EE en línea recta entre dos puntos $x_0$ y $x_1$, se utiliza una ley temporal basada en un parámetro $\lambda(t) \in [0,1]$, siendo $\lambda(0)=0$ al inicio del movimiento y $\lambda(t_f)=1$ al final.
+Para mover el EE en línea recta entre dos puntos $\boldsymbol{p}_0$ y $\boldsymbol{p}_1$, se utiliza una ley temporal basada en un parámetro $\lambda(t) \in [0,1]$, siendo $\lambda(0)=0$ al inicio del movimiento y $\lambda(t_f)=1$ al final.
 
-La interpolación se realiza con la aplicación de la siguiente fórmula:
+La interpolación de la posición se realiza con la aplicación de la siguiente fórmula:
 
-$x(t)=x_1-\lambda(t)(x_1-x_0)$
+$$\boldsymbol{p}(t)=\boldsymbol{p}_1-\lambda(t)(\boldsymbol{p}_1-\boldsymbol{p}_0)$$
+
+La rotación para pasar de un cuaternión inicial a otro final, viene dada por otro cuaternio:
+
+$$\boldsymbol{q}_0 \cdot \boldsymbol{q}_c = \boldsymbol{q}_1 \Rightarrow \boldsymbol{q}_c = \boldsymbol{q}_0^{-1} \cdot \boldsymbol{q}_1=[w_c,\boldsymbol{v}_c]$$
+
+Esto se puede representar como un giro $\theta$ sobre los ejes $\boldsymbol{n}$:
+
+$$\theta = 2acos(w_c)$$
+$$\boldsymbol{n} = \frac{\boldsymbol{v}_c}{sin(\theta/2)}$$
+
+Interpolamos $\theta$ y obtenemos el cuaternión interpolado de la sigueinte forma:
+
+$$\theta_{\lambda}=\lambda(t)\theta$$
+$$w_{rot}=cos(\frac{\theta_{\lambda}}{2})$$
+$$\boldsymbol{v}_{rot}=\boldsymbol{n} \cdot sin(\frac{\theta_{\lambda}}{2})$$
+$$\boldsymbol{q}_{\lambda}=\boldsymbol{q}_0 \cdot \boldsymbol{q}_{rot}$$
 
 ## Aplicación práctica
 
@@ -22,35 +38,53 @@ std::pair<tf2::Vector3, tf2::Quaternion> PoseInterpolation(
 
 Se definen todas las variables que se van a utilizar:
 ~~~
-Eigen::Matrix4d pos_interp;    // Posición en función del tiempo y lambda
-Eigen::Matrix3d orientacion;   // Orientación en función del tiempo y lambda
+Eigen::Matrix3d R_start = start_pose.block<3,3>(0,0); // Matriz de rotación del pose inicial
+Eigen::Matrix3d R_end = end_pose.block<3,3>(0,0); // Matriz de rotación del pose final
 tf2::Vector3 p_interp;    // Placeholder for the interpolated position
 tf2::Quaternion q_interp; // Placeholder for the interpolated quaternion
+tf2::Vector3 start_p = tf2::Vector3(    // Posición inicial
+    start_pose(0,3),        
+    start_pose(1,3),
+    start_pose(2,3));
+tf2::Vector3 end_p = tf2::Vector3(      // Posición final
+    end_pose(0,3),
+    end_pose(1,3),
+    end_pose(2,3));
 ~~~
 
-Se aplica la fórmula de intepolación de poses en el espacio cartesiano:
+Se aplica la fórmula de intepolación de posiciones en el espacio cartesiano:
 ~~~
-pos_interp = start_pose + lambda*(end_pose - start_pose);
-~~~
-
-Se obtiene la posición y orientación cartesianas a partir de la matriz `pos_interp`:
-~~~
-p_interp = tf2::Vector3(
-    pos_interp(0,3),
-    pos_interp(1,3),
-    pos_interp(2,3));
-        
-orientacion << pos_interp(0,0), pos_interp(0,1), pos_interp(0,2),
-    pos_interp(1,0), pos_interp(1,1), pos_interp(1,2),
-    pos_interp(2,0), pos_interp(2,1), pos_interp(2,2);
+p_interp = start_p + lambda*(end_p - start_p); // Posición interpolada usando interpolación lineal
 ~~~
 
-Finalmente la matriz de rotación se transforma en un cuaternión y se devuelve la posición y el cuaternión que representan la pose interpolada:
+Se calcula la orientación interpolada:
 ~~~
-q_interp = rot2Quat(orientacion);
+tf2::Quaternion q_c = InverseQuaternion(rot2Quat(R_start)) * rot2Quat(R_end);
+~~~
+
+Se obtiene el ángulo $\theta$ interpolado sobre los ejes $\boldsymbol{n}$:
+~~~
+tf2::Quaternion q_c = InverseQuaternion(rot2Quat(R_start)) * rot2Quat(R_end); // Rotación interpolada 
+double theta = 2*acos(q_c[3]);
+tf2::Vector3 n = tf2::Vector3(q_c[0], q_c[1], q_c[2]) / sin(theta/2);
+double theta_interp = lambda*theta;
+~~~
+
+Finalmente se calcula el cuaternión interpolado y se devuelven los resultados:
+~~~
+double s = sin(theta_interp/2);
+tf2::Quaternion q_rot = tf2::Quaternion(
+    n.x() * s,
+    n.y() * s,
+    n.z() * s,
+    cos(theta_interp/2)
+);
+q_interp = MuliplyQuaternions(rot2Quat(R_start), q_rot); // Rotación interpolada 
+q_interp.normalize();
 
 return {p_interp, q_interp};
 ~~~
+
 
 ## Resultados
 Tras lanzar el comando `ros2 launch cartesian_trajectory_planning send_trajectory.launch.py` en la terminal, se obtiene el resultado esperado:
@@ -80,7 +114,7 @@ $$
 Como se puede observar para obtener el cuaternio interpolado primero hemos de calcular $\boldsymbol{qk}_1$ y $\boldsymbol{qk}_2$, se aplicarán las siguientes ecuaciones:
 
 $$
-\mathbf{q}_{01} = \mathbf{q}_{01}^{-1} \cdot q_1
+\boldsymbol{q}_{01} = \boldsymbol{q}_{01}^{-1} \cdot \boldsymbol{q}_1
 $$
 
 $$
@@ -88,13 +122,13 @@ $$
 $$
 
 $$
-\mathbf{n}_{01} = \frac{\mathbf{v}_{01}}{\sin(\theta_{01}/2)}
+\boldsymbol{n}_{01} = \frac{\boldsymbol{v}_{01}}{\sin(\theta_{01}/2)}
 $$
 
 
 
 $$
-\mathbf{q}_{12} = \mathbf{q}_{1}^{-1} \cdot q_2
+\boldsymbol{q}_{12} = \boldsymbol{q}_{1}^{-1} \cdot \boldsymbol{q}_2
 $$
 
 $$
@@ -102,28 +136,29 @@ $$
 $$
 
 $$
-\mathbf{n}_{12} = \frac{\mathbf{v}_{12}}{\sin(\theta_{12}/2)}
+\boldsymbol{n}_{12} = \frac{\boldsymbol{v}_{12}}{\sin(\theta_{12}/2)}
 $$
 
 Entonces ya se pueden calcular los cuaternios $\boldsymbol{qk}_1$ y $\boldsymbol{qk}_2$.
 
 $$
-\theta_{k_1} = \frac{-(\tau - t)^2}{4\tau T_1}\,\theta_{01}
-\;\Rightarrow\;
-\mathbf{q}_{k_1} =
+\theta_{k_1} = \frac{-(\tau - t)^2}{4\tau T_1}\,\theta_{01}   
+\Rightarrow 
+\boldsymbol{q}_{k_1} = 
 \left[
-\cos\!\left(\frac{\theta_{k_1}}{2}\right),\;
-\mathbf{n}_{01}\,\sin\!\left(\frac{\theta_{k_1}}{2}\right)
+cos\left(\frac{\theta_{k_1}}{2}\right),\; 
+\boldsymbol{n}_{01} \cdot sin\left(\frac{\theta_{k_1}}{2}\right)
 \right]
 $$
 
+
 $$
 \theta_{k_2} = \frac{(\tau + t)^2}{4\tau T_1}\,\theta_{12}
-\;\Rightarrow\;
-\mathbf{q}_{k_2} =
+\Rightarrow
+\boldsymbol{q}_{k_2} =
 \left[
-\cos\!\left(\frac{\theta_{k_2}}{2}\right),\;
-\mathbf{n}_{12}\,\sin\!\left(\frac{\theta_{k_2}}{2}\right)
+cos\left(\frac{\theta_{k_2}}{2}\right),\;
+\boldsymbol{n}_{12} \cdot sin\left(\frac{\theta_{k_2}}{2}\right)
 \right]
 $$
 
