@@ -142,22 +142,22 @@ $$
 Entonces ya se pueden calcular los cuaternios $\boldsymbol{qk}_1$ y $\boldsymbol{qk}_2$.
 
 $$
-\theta_{k_1} = \frac{-(\tau - t)^2}{4\tau T_1}\,\theta_{01}   
+\theta_{k_1} = \frac{-(\tau - t)^2}{4\tau T_1} \theta_{01}   
 \Rightarrow 
 \boldsymbol{q}_{k_1} = 
 \left[
-cos\left(\frac{\theta_{k_1}}{2}\right),\; 
+cos\left(\frac{\theta_{k_1}}{2}\right),\quad 
 \boldsymbol{n}_{01} \cdot sin\left(\frac{\theta_{k_1}}{2}\right)
 \right]
 $$
 
 
 $$
-\theta_{k_2} = \frac{(\tau + t)^2}{4\tau T_1}\,\theta_{12}
+\theta_{k_2} = \frac{(\tau + t)^2}{4\tau T_1}\theta_{12}
 \Rightarrow
 \boldsymbol{q}_{k_2} =
 \left[
-cos\left(\frac{\theta_{k_2}}{2}\right),\;
+cos\left(\frac{\theta_{k_2}}{2}\right),\quad
 \boldsymbol{n}_{12} \cdot sin\left(\frac{\theta_{k_2}}{2}\right)
 \right]
 $$
