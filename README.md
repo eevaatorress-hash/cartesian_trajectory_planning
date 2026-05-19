@@ -262,7 +262,7 @@ q_interp = MuliplyQuaternions(MuliplyQuaternions(q1, qk1), qk2);
 
 
 ## Resultados
-Tras lanzar el comando `ros2 launch cartesian_trajectory_planning r6bot_controller.launch.py` y `ros2 launch cartesian_trajectory_planning send_trajectory.launch.py`, se obtiene el resultado esperado:
+Tras lanzar los comandos `ros2 launch cartesian_trajectory_planning r6bot_controller.launch.py` y `ros2 launch cartesian_trajectory_planning send_trajectory.launch.py`, se obtiene el resultado esperado:
 ![Resultado del suavizado](/images/Trayectoria_suavizada.png)
 
 También se pueden obtener los resultados vistos en las componentes de posición (X,Y,Z) y en las componentes de la orientación (ROLL,PITCH,YAW), todo esto usando el comando `python3 plot_data.py` en la terminal.
