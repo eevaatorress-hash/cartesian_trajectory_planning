@@ -268,3 +268,10 @@ Tras lanzar los comandos `ros2 launch cartesian_trajectory_planning r6bot_contro
 También se pueden obtener los resultados vistos en las componentes de posición (X,Y,Z) y en las componentes de la orientación (ROLL,PITCH,YAW), todo esto usando el comando `python3 plot_data.py` en la terminal.
 ![Resultado del suavizado en posición](/images/Trayectorias_posición.png)
 ![Resultado del suavizado en orientación](/images/Trayectorias_orientación.png)
+
+En cuanto a las preguntas realizadas en el enunciado de esta práctica:
+- Al aumentar el valor de $\boldsymbol{\tau}$, el tramo de transición alrededor del punto intermedio $\boldsymbol{P_1}$ se hace más largo y suave. Esto reduce los cambios bruscos de velocidad, aunque la trayectoria se redondea más cerca de $\boldsymbol{P_1}$.
+
+- Al modificar el valor de $\boldsymbol{T}$, cambia el tiempo total de recorrido de la trayectoria. Si $\boldsymbol{T}$ aumenta, el robot se mueve más lento; si $\boldsymbol{T}$ disminuye, el robot se mueve más rápido.
+
+- Sí, se puede cambiar la velocidad del robot modificando $\boldsymbol{T}$. Un tiempo total mayor produce menor velocidad, mientras que un tiempo total menor produce mayor velocidad.
