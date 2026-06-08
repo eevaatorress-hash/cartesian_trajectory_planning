@@ -87,7 +87,7 @@ return {p_interp, q_interp};
 
 
 ## Resultados
-Tras lanzar el comando `ros2 launch cartesian_trajectory_planning send_trajectory.launch.py` en la terminal, se obtiene el resultado mostrado en la figura 1.1.
+Tras lanzar el comando `ros2 launch cartesian_trajectory_planning send_trajectory.launch.py` en la terminal, se obtiene el resultado mostrado en la figura 1.1.1.
 
 <p align="center">
     <img src="/images/resultado_Lab1.png">
