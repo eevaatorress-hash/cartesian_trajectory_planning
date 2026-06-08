@@ -87,15 +87,24 @@ return {p_interp, q_interp};
 
 
 ## Resultados
-Tras lanzar el comando `ros2 launch cartesian_trajectory_planning send_trajectory.launch.py` en la terminal, se obtiene el resultado esperado:
+Tras lanzar el comando `ros2 launch cartesian_trajectory_planning send_trajectory.launch.py` en la terminal, se obtiene el resultado mostrado en la figura 1.1.
 
-![Resultado de la interpolación](/images/resultado_Lab1.png)
-
+<p align="center">
+    <img src="/images/resultado_Lab1.png">
+    <br>
+    <em>Figura 1.1: Resultados del ejercicio 1.</em>
+</p>
 
 # Ejercicio 2
 ## Fundamento teórico
-Cuando se concatenan múltiples trayectorias cartesianas que pasan por distintos puntos en el espacio, se quiere evitar las discontinuidades en velocidades las cuáles pueden resultar en aceleraciones elevadas. Es por ello, que se utilizará el suavizado de trayectorias por puntos intermedios y que ayudarán a conseguir lineas continuas en la velocidad durante esos tramos. Esto se puede observar en la siguiente figura:
-![Consecuencias de suavizado en velocidad](/images/smooth_trajectory.png)
+Cuando se concatenan múltiples trayectorias cartesianas que pasan por distintos puntos en el espacio, se quiere evitar las discontinuidades en velocidades las cuáles pueden resultar en aceleraciones elevadas. Es por ello, que se utilizará el suavizado de trayectorias por puntos intermedios y que ayudarán a conseguir lineas continuas en la velocidad durante esos tramos. Esto se puede observar en la figura 2.1.
+
+<p align="center">
+    <img src="/images/smooth_trajectory.png">
+    <br>
+    <em>Figura 2.1: Consecuencias del suavizado en la velocidad.</em>
+</p>
+
 
 En este ejercicio se dividirá la trayectoria en los tres tramos que se observaban en la figura anterior. El primer y último tramo usarán la interpolación de la pose planteada en el ejercicio anterior, mientras que el tramo intermedio seguirá la función del suavizado.
 
@@ -262,12 +271,32 @@ q_interp = MuliplyQuaternions(MuliplyQuaternions(q1, qk1), qk2);
 
 
 ## Resultados
-Tras lanzar los comandos `ros2 launch cartesian_trajectory_planning r6bot_controller.launch.py` y `ros2 launch cartesian_trajectory_planning send_trajectory.launch.py`, se obtiene el resultado esperado:
-![Resultado del suavizado](/images/Trayectoria_suavizada.png)
+Tras lanzar los comandos `ros2 launch cartesian_trajectory_planning r6bot_controller.launch.py` y `ros2 launch cartesian_trajectory_planning send_trajectory.launch.py`, se obtiene el resultado de la figura 2.2.
 
-También se pueden obtener los resultados vistos en las componentes de posición (X,Y,Z) y en las componentes de la orientación (ROLL,PITCH,YAW), todo esto usando el comando `python3 plot_data.py` en la terminal.
-![Resultado del suavizado en posición](/images/Trayectorias_posición.png)
-![Resultado del suavizado en orientación](/images/Trayectorias_orientación.png)
+<p align="center">
+    <img src="/images/Trayectoria_suavizada.png">
+    <br>
+    <em>Figura 2.2: Resultado del suavizado.</em>
+</p>
+
+
+
+También se pueden obtener los resultados vistos en las componentes de posición (X,Y,Z) y en las componentes de la orientación (ROLL,PITCH,YAW), todo esto usando el comando `python3 plot_data.py` en la terminal. Los resultados de la posición y orientación pueden ser observados en las figuras 2.3 y 2.4 respectivamente.
+
+<p align="center">
+    <img src="/images/Trayectorias_posición.png">
+    <br>
+    <em>Figura 2.3: Resultado del suavizado en posición.</em>
+</p>
+
+
+<p align="center">
+    <img src="/images/Trayectorias_orientación.png">
+    <br>
+    <em>Figura 2.4: Resultado del suavizado en orientación.</em>
+</p>
+
+
 
 En cuanto a las preguntas realizadas en el enunciado de esta práctica:
 - Al aumentar el valor de $\boldsymbol{\tau}$, el tramo de transición alrededor del punto intermedio $\boldsymbol{P_1}$ se hace más largo y suave. Esto reduce los cambios bruscos de velocidad, aunque la trayectoria se redondea más cerca de $\boldsymbol{P_1}$.
