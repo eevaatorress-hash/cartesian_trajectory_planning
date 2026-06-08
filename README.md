@@ -92,17 +92,17 @@ Tras lanzar el comando `ros2 launch cartesian_trajectory_planning send_trajector
 <p align="center">
     <img src="/images/resultado_Lab1.png">
     <br>
-    <em>Figura 1.1: Resultados del ejercicio 1.</em>
+    <em>Figura 1.1.1: Resultados del ejercicio 1.</em>
 </p>
 
 # Ejercicio 2
 ## Fundamento teórico
-Cuando se concatenan múltiples trayectorias cartesianas que pasan por distintos puntos en el espacio, se quiere evitar las discontinuidades en velocidades las cuáles pueden resultar en aceleraciones elevadas. Es por ello, que se utilizará el suavizado de trayectorias por puntos intermedios y que ayudarán a conseguir lineas continuas en la velocidad durante esos tramos. Esto se puede observar en la figura 2.1.
+Cuando se concatenan múltiples trayectorias cartesianas que pasan por distintos puntos en el espacio, se quiere evitar las discontinuidades en velocidades las cuáles pueden resultar en aceleraciones elevadas. Es por ello, que se utilizará el suavizado de trayectorias por puntos intermedios y que ayudarán a conseguir lineas continuas en la velocidad durante esos tramos. Esto se puede observar en la figura 1.2.1.
 
 <p align="center">
     <img src="/images/smooth_trajectory.png">
     <br>
-    <em>Figura 2.1: Consecuencias del suavizado en la velocidad.</em>
+    <em>Figura 1.2.1: Consecuencias del suavizado en la velocidad.</em>
 </p>
 
 
@@ -271,12 +271,12 @@ q_interp = MuliplyQuaternions(MuliplyQuaternions(q1, qk1), qk2);
 
 
 ## Resultados
-Tras lanzar los comandos `ros2 launch cartesian_trajectory_planning r6bot_controller.launch.py` y `ros2 launch cartesian_trajectory_planning send_trajectory.launch.py`, se obtiene el resultado de la figura 2.2.
+Tras lanzar los comandos `ros2 launch cartesian_trajectory_planning r6bot_controller.launch.py` y `ros2 launch cartesian_trajectory_planning send_trajectory.launch.py`, se obtiene el resultado de la figura 1.2.2.
 
 <p align="center">
     <img src="/images/Trayectoria_suavizada.png">
     <br>
-    <em>Figura 2.2: Resultado del suavizado.</em>
+    <em>Figura 1.2.2: Resultado del suavizado.</em>
 </p>
 
 
@@ -286,14 +286,14 @@ También se pueden obtener los resultados vistos en las componentes de posición
 <p align="center">
     <img src="/images/Trayectorias_posición.png">
     <br>
-    <em>Figura 2.3: Resultado del suavizado en posición.</em>
+    <em>Figura 1.2.3: Resultado del suavizado en posición.</em>
 </p>
 
 
 <p align="center">
     <img src="/images/Trayectorias_orientación.png">
     <br>
-    <em>Figura 2.4: Resultado del suavizado en orientación.</em>
+    <em>Figura 1.2.4: Resultado del suavizado en orientación.</em>
 </p>
 
 
