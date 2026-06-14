@@ -307,7 +307,7 @@ En cuanto a las preguntas realizadas en el enunciado de esta práctica:
 
 # Ejercicio extra
 ## Fundamento teórico
-El ejercicio consiste en programar una trayectoria de un robot para realizar una operación de *pick & place* usando puntos definidos en el espacio. Para ello se definen los puntos de la figura 1.3.1.
+El ejercicio consiste en programar una trayectoria de un robot para realizar una operación de *pick & place* usando puntos definidos en el espacio. Para ello, se definen los puntos de la figura 1.3.1.
 
 <p align="center">
     <img src="/images/puntos_del_espacio.png">
@@ -339,7 +339,7 @@ Dentro del nodo se obtienen los puntos desde el archivo .yaml:
     }
 ~~~
 
-Para realizar la secuencia de movimientos, se ha programado un bulce for que indica cual es el movimiento a realizar:
+Para realizar la secuencia de movimientos, se ha programado un bucle for que indica cual es el movimiento a realizar:
 
 ~~~
 for(double mov = 0; mov < 4; mov += 1)
