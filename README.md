@@ -383,7 +383,7 @@ for(double mov = 0; mov < 4; mov += 1)
 
 Respecto al ejercicio anterior se ha tenido que realizar un cambio en la interpolación de orientaciones, ya que se han detectado casos en los que el cálculo puede volverse numéricamente inestable.
 
-En la formulación utilizada, la interpolación entre cuaterniones se basa en el eje–ángulo de la rotación relativa. Este eje se obtiene dividiendo la parte vectorial del cuaternión por $sin(\theta/2)$. El problema aparece cuando la rotación entre dos poses es muy pequeña o prácticamente nula, ya que en ese caso $sin(\theta/2) \approx 0$. Esto provoca una división entre cero (o valores muy cercanos a cero), lo que genera números indefinidos. Para arreglar eso se ha comprobado que $sin(\theta/2)$ sea distinto de cero para hacer el cálculo habitual y en el caso contrario, el cuaternión es $[0 0 0 1]$. Por ejemplo:
+En la formulación utilizada, la interpolación entre cuaterniones se basa en el eje–ángulo de la rotación relativa. Este eje se obtiene dividiendo la parte vectorial del cuaternión por $sin(\theta/2)$. El problema aparece cuando la rotación entre dos poses es muy pequeña o prácticamente nula, ya que en ese caso $sin(\theta/2) \approx 0$. Esto provoca una división entre cero (o valores muy cercanos a cero), lo que genera números indefinidos. Para arreglar eso se ha comprobado que $sin(\theta/2)$ sea distinto de cero para hacer el cálculo habitual y en el caso contrario, el cuaternión es $(0, 0, 0, 1)$. Por ejemplo:
 
 ~~~
 q01 = MuliplyQuaternions(InverseQuaternion(q0),q1);
@@ -413,11 +413,11 @@ else
 ~~~
 
 ## Resultados
-Para visualizar el resultado hay que lanzar los sigueintes comandos en diferentes terminales:
-`ros2 launch cartesian_trajectory_planning r6bot_controller.launch.py`
-`ros2 launch cartesian_trajectory_planning send_pick_place.launch.py`
+Para visualizar el resultado hay que lanzar los sigueintes comandos en diferentes terminales:  
+`ros2 launch cartesian_trajectory_planning r6bot_controller.launch.py`  
+`ros2 launch cartesian_trajectory_planning send_pick_place.launch.py`  
 
-El resultado final de muestra en le figura 1.3.2.
+El resultado final de muestra en la figura 1.3.2.
 
 <p align="center">
     <img src="/images/resultados_extra.gif">
