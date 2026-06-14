@@ -304,3 +304,123 @@ En cuanto a las preguntas realizadas en el enunciado de esta práctica:
 - Al modificar el valor de $\boldsymbol{T}$, cambia el tiempo total de recorrido de la trayectoria. Si $\boldsymbol{T}$ aumenta, el robot se mueve más lento; si $\boldsymbol{T}$ disminuye, el robot se mueve más rápido.
 
 - Sí, se puede cambiar la velocidad del robot modificando $\boldsymbol{T}$. Un tiempo total mayor produce menor velocidad, mientras que un tiempo total menor produce mayor velocidad.
+
+# Ejercicio extra
+## Fundamento teórico
+El ejercicio consiste en programar una trayectoria de un robot para realizar una operación de *pick & place* usando puntos definidos en el espacio. Para ello se definen los puntos de la figura 1.3.1.
+
+<p align="center">
+    <img src="/images/puntos_del_espacio.png">
+    <br>
+    <em>Figura 1.3.1: Puntos pick & place en el espacio.</em>
+</p>
+
+La secuencia de movimiento es la siguiente:
+
+1. P_ini → P_pick (pasando por P_appro_pick con suavizado)
+2. P_pick → P_ini (pasando por P_appro_pick con suavizado)
+3. P_ini → P_place (pasando por P_appro_place con suavizado)
+4. P_place → P_ini (pasando por P_appro_place con suavizado)
+
+## Aplicación práctica
+Se ha creado un nuevo archivo `poses_pick_place.yaml` el cual contiene los cinco puntos del espacio. También se ha creado un nuevo nodo `send_pick_place.cpp`y su launch correspondiente `send_pick_place.launch.py`.
+
+Dentro del nodo se obtienen los puntos desde el archivo .yaml:
+
+~~~
+    try
+    {
+        const YAML::Node poses_root = YAML::LoadFile(poses_yaml_path);
+        P_ini = ParsePoseMatrix(poses_root, "pose0");
+        P_appro_pick = ParsePoseMatrix(poses_root, "pose1");
+        P_pick = ParsePoseMatrix(poses_root, "pose2");
+        P_appro_place = ParsePoseMatrix(poses_root, "pose3");
+        P_place = ParsePoseMatrix(poses_root, "pose4");
+    }
+~~~
+
+Para realizar la secuencia de movimientos, se ha programado un bulce for que indica cual es el movimiento a realizar:
+
+~~~
+for(double mov = 0; mov < 4; mov += 1)
+{
+    // Determine the poses based on the current movement index
+    if(mov == 0)
+    {
+        pose0 = P_ini;
+        pose1 = P_appro_pick;
+        pose2 = P_pick;
+    }
+    else if(mov == 1)
+    {
+        pose0 = P_pick;
+        pose1 = P_appro_pick;
+        pose2 = P_ini;
+    }
+    else if(mov == 2)
+    {
+        pose0 = P_ini;
+        pose1 = P_appro_place;
+        pose2 = P_place;
+    }
+    else if(mov == 3)
+    {
+        pose0 = P_place;
+        pose1 = P_appro_place;
+        pose2 = P_ini;
+    }
+    // Loop over the time range from -T to T with a step of sample_time and compute the interpolated Cartesian pose at each time step
+    for (double t = -T; t <= T + 1e-9; t += sample_time)
+    {
+        const auto [p_interp, q_interp] = ComputeNextCartesianPose(pose0, pose1, pose2, tau, T, t);
+
+        .
+        .
+        .
+    }
+}
+~~~
+
+Respecto al ejercicio anterior se ha tenido que realizar un cambio en la interpolación de orientaciones, ya que se han detectado casos en los que el cálculo puede volverse numéricamente inestable.
+
+En la formulación utilizada, la interpolación entre cuaterniones se basa en el eje–ángulo de la rotación relativa. Este eje se obtiene dividiendo la parte vectorial del cuaternión por $sin(\theta/2)$. El problema aparece cuando la rotación entre dos poses es muy pequeña o prácticamente nula, ya que en ese caso $sin(\theta/2) \approx 0$. Esto provoca una división entre cero (o valores muy cercanos a cero), lo que genera números indefinidos. Para arreglar eso se ha comprobado que $sin(\theta/2)$ sea distinto de cero para hacer el cálculo habitual y en el caso contrario, el cuaternión es $[0 0 0 1]$. Por ejemplo:
+
+~~~
+q01 = MuliplyQuaternions(InverseQuaternion(q0),q1);
+theta01 = 2*acos(q01[3]);
+
+if (fabs(sin(theta01/2)) < 1e-6)
+{
+    // No hay rotación significativa → eje no definido
+    qk1 = tf2::Quaternion(0,0,0,1);
+}
+else
+{
+    n01 = tf2::Vector3(q01[0], q01[1], q01[2]) / sin(theta01 / 2.0);
+    thetak1 = -std::pow((tau - t),2)*theta01/(4*tau*T);
+
+    double s1 = sin(thetak1/2);
+
+    qk1 = tf2::Quaternion(
+        
+        n01.x() * s1,
+        n01.y() * s1,
+        n01.z() * s1,
+        cos(thetak1/2)
+    );
+    
+}
+~~~
+
+## Resultados
+Para visualizar el resultado hay que lanzar los sigueintes comandos en diferentes terminales:
+`ros2 launch cartesian_trajectory_planning r6bot_controller.launch.py`
+`ros2 launch cartesian_trajectory_planning send_pick_place.launch.py`
+
+El resultado final de muestra en le figura 1.3.2.
+
+<p align="center">
+    <img src="/images/resultados_extra.gif">
+    <br>
+    <em>Figura 1.3.2: Movimiento pick & place.</em>
+</p>

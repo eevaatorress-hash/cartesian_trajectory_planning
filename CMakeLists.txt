@@ -45,6 +45,7 @@ endforeach()
 
 ## COMPILE
 add_executable(send_trajectory reference_generator/send_trajectory.cpp)
+add_executable(send_pick_place reference_generator/send_pick_place.cpp)
 add_executable(send_linear_trajectory reference_generator/send_linear_trajectory.cpp)
 add_executable(send_circular_trajectory reference_generator/send_circular_trajectory.cpp)
 
@@ -53,6 +54,12 @@ ament_target_dependencies(
   ${REF_GEN_INCLUDE_DEPENDS}
 )
 target_link_libraries(send_trajectory PUBLIC yaml-cpp)
+
+ament_target_dependencies(
+  send_pick_place PUBLIC
+  ${REF_GEN_INCLUDE_DEPENDS}
+)
+target_link_libraries(send_pick_place PUBLIC yaml-cpp)
 
 ament_target_dependencies(
   send_linear_trajectory PUBLIC
@@ -111,6 +118,10 @@ install(
 )
 install(
     TARGETS send_trajectory
+    RUNTIME DESTINATION lib/cartesian_trajectory_planning
+)
+install(
+    TARGETS send_pick_place
     RUNTIME DESTINATION lib/cartesian_trajectory_planning
 )
 install(
